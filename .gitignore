@@ -1,0 +1,17 @@
+# Build outputs
+dataset_generator.exe
+*.exe
+*.o
+*.obj
+
+# Environment files
+.env
+.env.*
+*.env
+venv/
+.venv/
+env/
+
+# OS/editor files
+Thumbs.db
+.DS_Store
