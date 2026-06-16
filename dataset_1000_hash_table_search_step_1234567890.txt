@@ -1,0 +1,6 @@
+Target: 1234567890
+Hash index = 1234567890 % 500 = 390
+Collision exists. Search through AVL tree in this bucket.
+Compare: 6568475890 > 1234567890, go left
+Compare: 1866596890 > 1234567890, go left
+-1 != 1234567890

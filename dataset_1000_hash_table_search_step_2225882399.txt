@@ -1,0 +1,5 @@
+Target: 2225882399
+Hash index = 2225882399 % 500 = 399
+Collision exists. Search through AVL tree in this bucket.
+Compare: 7550964399 > 2225882399, go left
+Compare: 2225882399 = 2225882399 -> found 2225882399/jaxlb
