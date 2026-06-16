@@ -1,5 +1,5 @@
 // *********************************************************
-// Program: heap_sort.cpp
+// Program: heap_sort_step.cpp
 // Course: CCP6214 Algorithm Design and Analysis
 // Lecture Class: TC6L
 // Tutorial Class: T13L
@@ -10,7 +10,7 @@
 // Member_4: 242UC244GL | Ong Wan Ning | ong.wan.ning@student.mmu.edu.my | +60 16-607 0825
 // *********************************************************
 // Task Distribution
-// Member_1:
+// Member_1: Hash Table Search
 // Member_2: Radix Sort
 // Member_3: Dataset Generator
 // Member_4: Heap Sort
@@ -78,6 +78,9 @@ int main(int argc, char* argv[]) {
         string intPart, strPart;
         getline(ss, intPart, ',');
         getline(ss, strPart, ',');
+        // Guard against CRLF-terminated input files (e.g. CSV generated on Windows)
+        while (!strPart.empty() && (strPart.back() == '\r' || strPart.back() == '\n'))
+            strPart.pop_back();
         arr.push_back({stoull(intPart), strPart});
     }
     infile.close();
@@ -105,12 +108,12 @@ int main(int argc, char* argv[]) {
     }
     printStep(outfile, arr, "initial");
 
-    // 2. Extract elements one by one and print the '$i=X$' state
+    // 2. Extract elements one by one and print the 'i = X' state
     for (int i = n - 1; i > 0; i--) {
         swap(arr[0], arr[i]);
         heapifyStep(arr, i, 0);
 
-        printStep(outfile, arr, "$i=" + to_string(i) + "$");
+        printStep(outfile, arr, "i = " + to_string(i));
     }
 
     outfile.close();

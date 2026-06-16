@@ -10,10 +10,10 @@
 // Member_4: 242UC244GL | Ong Wan Ning | ong.wan.ning@student.mmu.edu.my | +60 16-607 0825
 // *********************************************************
 // Task Distribution
-// Member_1: 
-// Member_2:
+// Member_1: Hash Table Search
+// Member_2: Radix Sort
 // Member_3: Dataset Generator
-// Member_4:
+// Member_4: Heap Sort
 // *********************************************************
 
 #include <iostream>
@@ -45,7 +45,7 @@ int main() {
     // Array initialized with the 10 specific dataset sizes required for the experiment
 	// update here for different n
     long long input_sizes[] = {
-        1000, 5000, 10000, 50000, 100000, 
+        1000, 5000, 10000, 50000, 100000,
         200000, 500000, 1000000, 5000000, 10000000
     };
     int num_sizes = sizeof(input_sizes) / sizeof(input_sizes[0]);
@@ -63,11 +63,11 @@ int main() {
         long long n = input_sizes[i];
         long long search_n = n / 10;
         long long found_target = search_n / 2;
-        
+
         // Track uniqueness per dataset size using an unordered_set to completely avoid duplicates
         unordered_set<unsigned long long> unique_integers;
         vector<unsigned long long> dataset_values;
-        
+
         // Construct file path matching the target template (e.g., dataset/dataset_1000.csv)
         string filename = output_dir + "/dataset_" + to_string(n) + ".csv";
         ofstream outfile(filename);
@@ -94,13 +94,13 @@ int main() {
             if (unique_integers.find(random_val) == unique_integers.end()) {
                 unique_integers.insert(random_val);
                 dataset_values.push_back(random_val);
-                
+
                 string random_str = generate_random_string(rng);
-                
+
                 // Write formatted row directly into the CSV: integer,string
                 outfile << random_val << "," << random_str << "\n";
                 count++;
-                
+
                 // Print basic progress updates for tracking massive datasets smoothly
                 if (count > 0 && count % 2000000 == 0) {
                     cout << "   -> Generated " << count << " elements..." << endl;

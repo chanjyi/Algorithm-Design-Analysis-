@@ -10,7 +10,7 @@
 // Member_4: 242UC244GL | Ong Wan Ning | ong.wan.ning@student.mmu.edu.my | +60 16-607 0825
 // *********************************************************
 // Task Distribution
-// Member_1:
+// Member_1: Hash Table Search
 // Member_2: Radix Sort
 // Member_3: Dataset Generator
 // Member_4: Heap Sort
@@ -69,6 +69,9 @@ vector<Record> readCSV(const string& filename) {
         string intPart, strPart;
         getline(ss, intPart, ',');
         getline(ss, strPart, ',');
+        // Guard against CRLF-terminated input files (e.g. CSV generated on Windows)
+        while (!strPart.empty() && (strPart.back() == '\r' || strPart.back() == '\n'))
+            strPart.pop_back();
         arr.push_back({stoull(intPart), strPart});
     }
     infile.close();

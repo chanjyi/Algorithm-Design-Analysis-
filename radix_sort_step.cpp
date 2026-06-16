@@ -10,10 +10,10 @@
 // Member_4: 242UC244GL | Ong Wan Ning | ong.wan.ning@student.mmu.edu.my | +60 16-607 0825
 // *********************************************************
 // Task Distribution
-// Member_1: 
+// Member_1: Hash Table Search
 // Member_2: Radix Sort
 // Member_3: Dataset Generator
-// Member_4:
+// Member_4: Heap Sort
 // *********************************************************
 
 #include <iostream>
@@ -101,12 +101,12 @@ int main(int argc, char* argv[]) {
     size_t slashPos = baseName.find_last_of("/\\");
     if (slashPos != string::npos) baseName = baseName.substr(slashPos + 1);
     // baseName is now "dataset_1000.csv"
-    
+
     size_t underPos = baseName.find_last_of("_");
     size_t dotPos = baseName.find_last_of(".");
     string n_str = baseName.substr(underPos + 1, dotPos - underPos - 1);
 
-    string outFilename = "dataset_" + n_str + "_radix_sorted_step_" 
+    string outFilename = "dataset_" + n_str + "_radix_sorted_step_"
                        + to_string(startRow) + "_" + to_string(endRow) + ".txt";
     ofstream outfile(outFilename);
 

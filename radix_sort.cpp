@@ -10,10 +10,10 @@
 // Member_4: 242UC244GL | Ong Wan Ning | ong.wan.ning@student.mmu.edu.my | +60 16-607 0825
 // *********************************************************
 // Task Distribution
-// Member_1: 
+// Member_1: Hash Table Search
 // Member_2: Radix Sort
 // Member_3: Dataset Generator
-// Member_4:
+// Member_4: Heap Sort
 // *********************************************************
 
 #include <iostream>
