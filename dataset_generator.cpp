@@ -46,7 +46,7 @@ int main() {
 	// update here for different n
     long long input_sizes[] = {
         1000, 5000, 10000, 50000, 100000,
-        200000, 500000, 1000000, 5000000, 10000000
+        200000, 500000, 1000000, 5000000, 10000000, 50000000
     };
     int num_sizes = sizeof(input_sizes) / sizeof(input_sizes[0]);
 
