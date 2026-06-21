@@ -1,4 +1,4 @@
-// *********************************************************
+// *************
 // Program: hash_table_search.cpp
 // Course: CCP6214 Algorithm Design and Analysis
 // Lecture Class: TC6L
@@ -8,13 +8,13 @@
 // Member_2: 242UC244QN | Chew Jia Yi | chew.jia.yi@student.mmu.edu.my | +60 13-282 3398
 // Member_3: 242UC244FZ | Koay Yee Shuen | koay.yee.shuen@student.mmu.edu.my | +60 11-5680 0192
 // Member_4: 242UC244GL | Ong Wan Ning | ong.wan.ning@student.mmu.edu.my | +60 16-607 0825
-// *********************************************************
+// *************
 // Task Distribution
 // Member_1: Hash Table Search
 // Member_2: Radix Sort
 // Member_3: Dataset Generator
 // Member_4: Heap Sort
-// *********************************************************
+// *************
 
 #include <iostream>
 #include <fstream>
@@ -164,8 +164,7 @@ public:
     bool search(unsigned long long target) const {
         int index = hashFunction(target);
         AVLNode* current = table[index];
-
-        while (current != nullptr) {
+while (current != nullptr) {
             if (target == current->data.key) {
                 return true;
             }
@@ -312,8 +311,7 @@ void runSearchExperiment(const string& filename) {
         if (comparisons > maxComparisons) {
             maxComparisons = comparisons;
             worstTarget = record.key;
-
-            worstTargets.clear();
+worstTargets.clear();
             worstTargets.push_back(record.key);
         }
         else if (comparisons == maxComparisons) {
@@ -389,11 +387,11 @@ void runSearchExperiment(const string& filename) {
     outputFile << "Worst case target example: " << worstTarget << "\n\n";
 
     outputFile << "Best case comparisons per search: "
-               << bestComparisons << "\n";
+               << bestComparisons / n << "\n";
     outputFile << "Average case comparisons per search: "
-               << averageComparisons << "\n";
+               << averageComparisons / n << "\n";
     outputFile << "Worst case comparisons per search: "
-               << maxComparisons << "\n\n";
+               << maxComparisons / n << "\n\n";
 
     outputFile << "Best case time: "
                << bestTime << " seconds\n";
