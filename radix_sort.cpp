@@ -1,8 +1,8 @@
 // *********************************************************
-// Program: dataset_generator.cpp
+// Program: radix_sort.cpp
 // Course: CCP6214 Algorithm Design and Analysis
 // Lecture Class: TC6L
-// Tutorial Class: T13L
+// Tutorial Class: T21L
 // Trimester: 2610
 // Member_1: 242UC244SR | Chan Jia Yi | chan.jia.yi1@student.mmu.edu.my| +60 12-253 9359
 // Member_2: 242UC244QN | Chew Jia Yi | chew.jia.yi@student.mmu.edu.my | +60 13-282 3398
@@ -62,28 +62,62 @@ vector<Record> readCSV(const string& filename) {
     ifstream infile(filename);
     string line;
     while (getline(infile, line)) {
+        if (line.empty()) continue;
+
         stringstream ss(line);
         string intPart, strPart;
         getline(ss, intPart, ',');
         getline(ss, strPart, ',');
-        arr.push_back({stoull(intPart), strPart});
+
+        // Guard against CRLF-terminated input files (e.g. CSV generated on Windows)
+        while (!strPart.empty() && (strPart.back() == '\r' || strPart.back() == '\n'))
+            strPart.pop_back();
+
+        if (!intPart.empty() && !strPart.empty())
+            arr.push_back({stoull(intPart), strPart});
     }
     infile.close();
     return arr;
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        cerr << "Usage: radix_sort dataset_1000.csv dataset_5000.csv ..." << endl;
+    vector<string> filenames;
+
+    if (argc >= 2) {
+        // Still works the old way too: radix_sort dataset_1000.csv dataset_5000.csv ...
+        for (int f = 1; f < argc; f++)
+            filenames.push_back(argv[f]);
+    } else {
+        // Fallback: ask for paths in the VS Code terminal pane (no command-line args needed)
+        cout << "=== Radix Sort ===" << endl;
+        cout << "Enter dataset file paths one per line." << endl;
+        cout << "Press Enter on an empty line when done." << endl;
+        cout << endl;
+
+        string path;
+        while (true) {
+            cout << "File path: ";
+            getline(cin, path);
+            if (path.empty()) break;
+            filenames.push_back(path);
+        }
+    }
+
+    if (filenames.empty()) {
+        cerr << "No files entered. Exiting." << endl;
         return 1;
     }
 
-    for (int f = 1; f < argc; f++) {
-        string filename = argv[f];
+    cout << endl;
+
+    for (const string& filename : filenames) {
         cout << "Processing: " << filename << endl;
 
-        // --- I/O NOT timed ---
         vector<Record> arr = readCSV(filename);
+        if (arr.empty()) {
+            cerr << "Error: Could not read or file is empty: " << filename << endl;
+            continue;
+        }
         int n = arr.size();
 
         // --- START TIMER ---

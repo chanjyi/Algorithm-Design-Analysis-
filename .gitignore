@@ -18,3 +18,6 @@ Thumbs.db
 
 radix_sorted_dataset_*.csv
 heap_sorted_dataset_*.csv
+*.csv
+dataset/*.csv
+dataset_search/*.csv

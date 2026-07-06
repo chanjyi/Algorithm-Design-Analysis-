@@ -2,7 +2,7 @@
 // Program: hash_table_search_step.cpp
 // Course: CCP6214 Algorithm Design and Analysis
 // Lecture Class: TC6L
-// Tutorial Class: T13L
+// Tutorial Class: T21L
 // Trimester: 2610
 // Member_1: 242UC244SR | Chan Jia Yi | chan.jia.yi1@student.mmu.edu.my| +60 12-253 9359
 // Member_2: 242UC244QN | Chew Jia Yi | chew.jia.yi@student.mmu.edu.my | +60 13-282 3398
@@ -37,7 +37,8 @@ struct AVLNode {
 
     AVLNode(const Record& r) {
         data = r;
-        left = right = nullptr;
+        left = nullptr;
+        right = nullptr;
         height = 1;
     }
 };
@@ -84,26 +85,22 @@ AVLNode* insertAVL(AVLNode* node, const Record& r) {
     else if (r.key > node->data.key)
         node->right = insertAVL(node->right, r);
     else
-        return node; // Ignore duplicate key. Dataset should already be unique.
+        return node;
 
     node->height = 1 + max(getHeight(node->left), getHeight(node->right));
     int balance = getBalance(node);
 
-    // Left Left
     if (balance > 1 && r.key < node->left->data.key)
         return rotateRight(node);
 
-    // Right Right
     if (balance < -1 && r.key > node->right->data.key)
         return rotateLeft(node);
 
-    // Left Right
     if (balance > 1 && r.key > node->left->data.key) {
         node->left = rotateLeft(node->left);
         return rotateRight(node);
     }
 
-    // Right Left
     if (balance < -1 && r.key < node->right->data.key) {
         node->right = rotateRight(node->right);
         return rotateLeft(node);
@@ -186,24 +183,29 @@ public:
     }
 };
 
-vector<Record> readCSV(const string& filename) {
+vector<Record> readDatasetCSV(const string& filename) {
     vector<Record> records;
     ifstream infile(filename);
     string line;
 
     if (!infile.is_open()) {
-        cerr << "Cannot open file: " << filename << endl;
+        cerr << "Cannot open dataset file: " << filename << endl;
         return records;
     }
 
     while (getline(infile, line)) {
         if (line.empty()) continue;
+
         stringstream ss(line);
         string intPart, strPart;
         getline(ss, intPart, ',');
         getline(ss, strPart, ',');
 
-        if (!intPart.empty()) {
+        if (!strPart.empty() && strPart.back() == '\r') {
+            strPart.pop_back();
+        }
+
+        if (!intPart.empty() && !strPart.empty()) {
             records.push_back({stoull(intPart), strPart});
         }
     }
@@ -212,19 +214,30 @@ vector<Record> readCSV(const string& filename) {
     return records;
 }
 
-bool containsKey(const vector<Record>& records, unsigned long long key) {
-    for (const Record& r : records) {
-        if (r.key == key) return true;
-    }
-    return false;
-}
+vector<unsigned long long> readQueryCSV(const string& filename) {
+    vector<unsigned long long> queries;
+    ifstream infile(filename);
+    string line;
 
-unsigned long long chooseNotFoundTarget(const vector<Record>& records) {
-    unsigned long long target = 1234567890ULL;
-    while (containsKey(records, target)) {
-        target++;
+    if (!infile.is_open()) {
+        cerr << "Cannot open dataset_search file: " << filename << endl;
+        return queries;
     }
-    return target;
+
+    while (getline(infile, line)) {
+        if (line.empty()) continue;
+
+        stringstream ss(line);
+        string keyText;
+        getline(ss, keyText, ',');
+
+        if (!keyText.empty()) {
+            queries.push_back(stoull(keyText));
+        }
+    }
+
+    infile.close();
+    return queries;
 }
 
 string extractSizeFromFilename(string filename) {
@@ -240,48 +253,97 @@ string extractSizeFromFilename(string filename) {
     return filename.substr(underPos + 1, dotPos - underPos - 1);
 }
 
+string deriveQueryFilename(const string& datasetFilename) {
+    string n_str = extractSizeFromFilename(datasetFilename);
+    return "dataset_search/dataset_search_from_" + n_str + ".csv";
+}
+
 int main(int argc, char* argv[]) {
+    string datasetFilename;
+
     if (argc < 2) {
-        cerr << "Usage: hash_table_search_step <dataset_file.csv>" << endl;
-        return 1;
+        // Fallback: Ask the user to type it into the VS Code terminal pane
+        cout << "Enter the path to the dataset CSV file: ";
+        cin >> datasetFilename;
+    } else {
+        datasetFilename = argv[1];
     }
 
-    string filename = argv[1];
-    vector<Record> records = readCSV(filename);
+    string queryFilename = deriveQueryFilename(datasetFilename);
+
+    vector<Record> records = readDatasetCSV(datasetFilename);
+    vector<unsigned long long> queries = readQueryCSV(queryFilename);
 
     if (records.empty()) {
         cerr << "Dataset is empty or cannot be read." << endl;
         return 1;
     }
 
-    // Tutor can change these targets during demo.
-    // Found target: use one value from the dataset.
-    unsigned long long foundTarget = records[0].key;
+    if (queries.empty()) {
+        cerr << "dataset_search file is empty or cannot be read." << endl;
+        return 1;
+    }
 
-    // Not-found target: automatically choose a value that is not inside the dataset.
-    unsigned long long notFoundTarget = chooseNotFoundTarget(records);
-
-    // Table size. Using about n/2 creates some collisions, so the AVL tree path can be shown.
     int tableSize = max(1, (int)records.size() / 2);
     HashTable ht(tableSize);
 
-    for (const Record& r : records)
+    for (const Record& r : records) {
         ht.insert(r);
+    }
 
-    string n_str = extractSizeFromFilename(filename);
+    string n_str = extractSizeFromFilename(datasetFilename);
+    string outputFilename = "dataset_" + n_str + "_hash_table_search_step_all.txt";
 
-    string foundFilename = "dataset_" + n_str + "_hash_table_search_step_" + to_string(foundTarget) + ".txt";
-    ofstream foundOut(foundFilename);
-    ht.searchStep(foundTarget, foundOut);
-    foundOut.close();
+    ofstream outfile(outputFilename);
 
-    string notFoundFilename = "dataset_" + n_str + "_hash_table_search_step_" + to_string(notFoundTarget) + ".txt";
-    ofstream notFoundOut(notFoundFilename);
-    ht.searchStep(notFoundTarget, notFoundOut);
-    notFoundOut.close();
+    if (!outfile.is_open()) {
+        cerr << "Cannot create output file: " << outputFilename << endl;
+        return 1;
+    }
 
-    cout << "Found target step output saved to: " << foundFilename << endl;
-    cout << "Not-found target step output saved to: " << notFoundFilename << endl;
+    outfile << "Dataset file: " << datasetFilename << "\n";
+    outfile << "dataset_search file: " << queryFilename << "\n";
+    outfile << "Dataset records inserted into hash table: " << records.size() << "\n";
+    outfile << "dataset_search targets compared: " << queries.size() << "\n";
+    outfile << "Hash table size: " << tableSize << "\n";
+    outfile << "Output type: Search path for every target in dataset_search\n\n";
+
+    int foundCount = 0;
+    int notFoundCount = 0;
+
+    for (int i = 0; i < (int)queries.size(); i++) {
+        outfile << "==================================================\n";
+        outfile << "Query row: " << (i + 1) << " of " << queries.size() << "\n";
+
+        bool found = ht.searchStep(queries[i], outfile);
+
+        if (found) {
+            foundCount++;
+            outfile << "Result: FOUND\n";
+        }
+        else {
+            notFoundCount++;
+            outfile << "Result: NOT_FOUND\n";
+        }
+
+        outfile << "\n";
+    }
+
+    outfile << "==================================================\n";
+    outfile << "SUMMARY\n";
+    outfile << "Total targets compared: " << queries.size() << "\n";
+    outfile << "Found count: " << foundCount << "\n";
+    outfile << "Not-found count: " << notFoundCount << "\n";
+
+    outfile.close();
+
+    cout << "Dataset file: " << datasetFilename << endl;
+    cout << "dataset_search file: " << queryFilename << endl;
+    cout << "Dataset records inserted into hash table: " << records.size() << endl;
+    cout << "dataset_search targets compared: " << queries.size() << endl;
+    cout << "Found count: " << foundCount << endl;
+    cout << "Not-found count: " << notFoundCount << endl;
+    cout << "Step output for all targets saved to: " << outputFilename << endl;
 
     return 0;
 }

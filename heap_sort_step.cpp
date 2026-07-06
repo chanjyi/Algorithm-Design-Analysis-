@@ -2,7 +2,7 @@
 // Program: heap_sort_step.cpp
 // Course: CCP6214 Algorithm Design and Analysis
 // Lecture Class: TC6L
-// Tutorial Class: T13L
+// Tutorial Class: T21L
 // Trimester: 2610
 // Member_1: 242UC244SR | Chan Jia Yi | chan.jia.yi1@student.mmu.edu.my| +60 12-253 9359
 // Member_2: 242UC244QN | Chew Jia Yi | chew.jia.yi@student.mmu.edu.my | +60 13-282 3398
@@ -51,12 +51,15 @@ void heapifyStep(vector<Record>& arr, int n, int i) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        cerr << "Usage: heap_sort_step <dataset_file.csv>" << endl;
-        return 1;
-    }
+    string filename; // This matches your original variable name
 
-    string filename = argv[1];
+    if (argc < 2) {
+        // Fallback: Ask the user to type it into the VS Code terminal pane
+        cout << "Enter the path to the dataset CSV file: ";
+        cin >> filename;
+    } else {
+        filename = argv[1];
+    }
 
     // Tutor will uncomment one of these pairs during the demo
     int startRow = 1;   int endRow = 7;

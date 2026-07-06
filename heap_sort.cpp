@@ -2,7 +2,7 @@
 // Program: heap_sort.cpp
 // Course: CCP6214 Algorithm Design and Analysis
 // Lecture Class: TC6L
-// Tutorial Class: T13L
+// Tutorial Class: T21L
 // Trimester: 2610
 // Member_1: 242UC244SR | Chan Jia Yi | chan.jia.yi1@student.mmu.edu.my| +60 12-253 9359
 // Member_2: 242UC244QN | Chew Jia Yi | chew.jia.yi@student.mmu.edu.my | +60 13-282 3398
@@ -79,23 +79,32 @@ vector<Record> readCSV(const string& filename) {
 }
 
 int main(int argc, char* argv[]) {
+    vector<string> filenames;
+
     if (argc < 2) {
-        cerr << "Usage: heap_sort dataset_1000.csv ..." << endl;
-        return 1;
+        // Fallback: Ask the user to type it into the VS Code terminal pane
+        // (lets this run with the VS Code "Run" button, no command-line args needed)
+        string datasetFilename;
+        cout << "Enter the path to the dataset CSV file: ";
+        cin >> datasetFilename;
+        filenames.push_back(datasetFilename);
+    } else {
+        // Still works the old way too: heap_sort dataset_1000.csv dataset_5000.csv ...
+        for (int f = 1; f < argc; f++)
+            filenames.push_back(argv[f]);
     }
 
-    for (int f = 1; f < argc; f++) {
-        string filename = argv[f];
+    for (const string& filename : filenames) {
         cout << "Processing: " << filename << endl;
 
         vector<Record> arr = readCSV(filename);
         int n = arr.size();
 
-        // --- START TIMER (Only timing the algorithm!) ---
+        // start timer
         auto start = chrono::high_resolution_clock::now();
         heapSort(arr);
         auto end = chrono::high_resolution_clock::now();
-        // --- STOP TIMER ---
+        // stop timer
 
         double elapsed = chrono::duration<double>(end - start).count();
         cout << "n = " << n << " | Running time: " << elapsed << " seconds" << endl;
@@ -106,7 +115,6 @@ int main(int argc, char* argv[]) {
         for (auto& rec : arr)
             outfile << rec.first << "/" << rec.second << "\n";
 
-        // Rubric requires running time printed inside the output file too
         outfile << "\nRunning time: " << elapsed << " seconds\n";
         outfile.close();
 
