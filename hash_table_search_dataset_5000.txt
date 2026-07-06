@@ -1,0 +1,24 @@
+Dataset file: dataset/dataset_5000.csv
+Query/Search file: dataset_search/dataset_search_from_5000.csv
+Search result CSV: search_results_5000.csv
+Dataset size: 5000
+Query target rows: 1000
+Searches performed per case: 5000
+Hash table size: 2500
+Collision handling: AVL tree in each hash bucket
+
+Best case target group: first half of dataset_search (FOUND targets)
+Best case target count: 500
+Best case FOUND count in target group: 500
+
+Average case target group: odd-numbered rows from dataset_search (1st, 3rd, 5th, ...)
+Average case target count: 500
+Average case FOUND count in target group: 250
+
+Worst case target group: last half of dataset_search (NOT FOUND targets)
+Worst case target count: 500
+Worst case FOUND count in target group: 0
+
+Best case time: 0.0009984 seconds
+Average case time: 0 seconds
+Worst case time: 0 seconds
